@@ -8,10 +8,10 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#define DATA_PROVIDER_PRIVATES(T) \
- private:                         \
-  friend class Tomoto_HM330X;     \
-  const uint8_t* m_data;          \
+#define TOMOTO_HM330X_DATA_PROVIDER_PRIVATES(T) \
+ private:                                       \
+  friend class Tomoto_HM330X;                   \
+  const uint8_t* m_data;                        \
   T(const uint8_t* data) : m_data(data) {}
 
 class Tomoto_HM330X {
@@ -32,34 +32,37 @@ class Tomoto_HM330X {
 
   uint16_t getSensorNumber() const { return decodeUint16(m_data, 1); }
 
-  // The data sheet says "Standard particulate" and "Atmospheric environment",
-  // but what do they mean?
-  // https://files.seeedstudio.com/wiki/Grove-Laser_PM2.5_Sensor-HM3301/res/HM-3300%263600_V2.1.pdf
+  // The data sheet says "Standard particulate" and "Atmospheric environment", but what they mean?
   //
-  // I use my own interpretation based on the discussion below:
-  // https://publiclab.org/questions/samr/04-07-2019/how-to-interpret-pms5003-sensor-values
+  // https://wiki.seeedstudio.com/Grove-Laser_PM2.5_Sensor-HM3301/ says:
+  //   The standard particulate matter mass concentration value refers to the mass concentration
+  //   value obtained by density conversion of industrial metal particles as equivalent particles,
+  //   and is suitable for use in industrial production workshops and the like.
+  //   The concentration of particulate matter in the atmospheric environment is
+  //   converted by the density of the main pollutants in the air as equivalent particles,
+  //   and is suitable for ordinary indoor and outdoor atmospheric environments.
 
-  // Concentration in the CF=1 standard atmosphere (ug/m3)
-  class StandardAtmosphere {
-    DATA_PROVIDER_PRIVATES(StandardAtmosphere)
+  // Concentration based on CF=1 standard particulate matter (ug/m3)
+  class StandardParticulate {
+    TOMOTO_HM330X_DATA_PROVIDER_PRIVATES(StandardParticulate)
    public:
     uint16_t getPM1() const { return decodeUint16(m_data, 2); }
     uint16_t getPM2_5() const { return decodeUint16(m_data, 3); };
     uint16_t getPM10() const { return decodeUint16(m_data, 4); };
   } std;
 
-  // Concentration in the ambient atmosphere as it is (ug/m3)
-  class AmbientAtmosphere {
-    DATA_PROVIDER_PRIVATES(AmbientAtmosphere)
+  // Concentration based on the pollutants in the air (ug/m3)
+  class AtmosphericEnvironment {
+    TOMOTO_HM330X_DATA_PROVIDER_PRIVATES(AtmosphericEnvironment)
    public:
     uint16_t getPM1() const { return decodeUint16(m_data, 5); }
     uint16_t getPM2_5() const { return decodeUint16(m_data, 6); };
     uint16_t getPM10() const { return decodeUint16(m_data, 7); };
-  } amb;
+  } atm;
 
   // Number of particles with the specified diameter or above in 0.1L of air
-  class RawNumberOfParticles {
-    DATA_PROVIDER_PRIVATES(RawNumberOfParticles)
+  class ParticleCount {
+    TOMOTO_HM330X_DATA_PROVIDER_PRIVATES(ParticleCount)
    public:
     uint16_t get0_3() const { return decodeUint16(m_data, 8); }
     uint16_t get0_5() const { return decodeUint16(m_data, 9); }
@@ -67,7 +70,7 @@ class Tomoto_HM330X {
     uint16_t get2_5() const { return decodeUint16(m_data, 11); }
     uint16_t get5() const { return decodeUint16(m_data, 12); }
     uint16_t get10() const { return decodeUint16(m_data, 13); }
-  } raw;
+  } count;
 
  private:
   bool sendCommand(uint8_t cmd);
@@ -77,4 +80,4 @@ class Tomoto_HM330X {
   }
 };
 
-#undef DATA_PROVIDER_PRIVATES
+#undef TOMOTO_HM330X_DATA_PROVIDER_PRIVATES

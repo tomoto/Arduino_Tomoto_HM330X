@@ -65,8 +65,8 @@ void loop() {
                 ? State::GOOD
                 : batteryPercentage >= 30 ? State::WARN : State::BAD;
 
-  const int pm2_5 = sensor.std.getPM2_5();
-  const int pm10 = sensor.std.getPM10();
+  const int pm2_5 = sensor.atm.getPM2_5();
+  const int pm10 = sensor.atm.getPM10();
   const float aqi = AirQualityIndex::fromPM25(pm2_5);
 
   if (!failureStartTime) {

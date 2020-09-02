@@ -3,7 +3,7 @@
 Tomoto_HM330X::Tomoto_HM330X(uint8_t addr) : Tomoto_HM330X(Wire, addr) {}
 
 Tomoto_HM330X::Tomoto_HM330X(TwoWire& wire, uint8_t addr)
-    : m_wire(Wire), m_addr(addr), std(m_data), amb(m_data), raw(m_data) {}
+    : m_wire(Wire), m_addr(addr), std(m_data), atm(m_data), count(m_data) {}
 
 bool Tomoto_HM330X::begin(bool retry) {
   m_wire.begin();
