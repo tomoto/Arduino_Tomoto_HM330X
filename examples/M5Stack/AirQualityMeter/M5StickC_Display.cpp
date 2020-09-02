@@ -3,6 +3,7 @@
 
 #include <M5StickC.h>
 
+#include "Battery.h"
 #include "Display.h"
 
 static const uint16_t signalColors[] = {
@@ -10,7 +11,7 @@ static const uint16_t signalColors[] = {
     TFT_YELLOW,  // Moderate
     TFT_ORANGE,  // Unhealthy for sensitive groups
     TFT_RED,     // Unhealthy
-    TFT_PURPLE   // Hazardous
+    TFT_PURPLE   // Very Unhealthy
 };
 
 static const uint16_t statusColors[] = {
@@ -54,8 +55,7 @@ static void updateAndDisplaySensorState(TFT_eSPI& d, bool update,
   d.drawString("SENS *", x[3], y[1]);
 }
 
-void displayStatus(float aqi, int pm2_5, int pm10, State sensorState,
-                   int batteryPercentage, State batteryState) {
+void displayStatus(float aqi, int pm2_5, int pm10, State sensorState) {
   TFT_eSprite d(&M5.Lcd);
   d.createSprite(160, 80);
 
@@ -88,6 +88,14 @@ void displayStatus(float aqi, int pm2_5, int pm10, State sensorState,
   updateAndDisplaySensorState(d, true, sensorState);
 
   // Battery status
+  int batteryPercentage = getBatteryPercent();
+  State batteryState =
+      isInputPowerConnected()
+          ? State::COOL
+          : batteryPercentage >= 60
+                ? State::GOOD
+                : batteryPercentage >= 30 ? State::WARN : State::BAD;
+
   d.setTextFont(1);
   d.setTextColor(statusColors[batteryState]);
   char buf[8];

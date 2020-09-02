@@ -4,7 +4,6 @@
 
 void initDisplay();
 void setDisplayBrightness(int brightness);
-void displayStatus(float aqi, int pm2_5, int pm10, State sensorState,
-                   int batteryPercentage, State batteryState);
+void displayStatus(float aqi, int pm2_5, int pm10, State sensorState);
 void animateDisplay();
 void displayInitializationError();

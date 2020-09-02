@@ -6,7 +6,6 @@
 #include <Wire.h>
 
 #include "AirQualityIndex.h"
-#include "Battery.h"
 #include "Display.h"
 #include "Platform.h"
 #include "System.h"
@@ -57,14 +56,6 @@ void loop() {
     failureStartTime = 0;  // Clear failure
   }
 
-  int batteryPercentage = getBatteryPercent();
-  State batteryState =
-      isInputPowerConnected()
-          ? State::COOL
-          : batteryPercentage >= 60
-                ? State::GOOD
-                : batteryPercentage >= 30 ? State::WARN : State::BAD;
-
   const int pm2_5 = sensor.atm.getPM2_5();
   const int pm10 = sensor.atm.getPM10();
   const float aqi = AirQualityIndex::fromPM25(pm2_5);
@@ -78,7 +69,7 @@ void loop() {
     Serial.println(aqi);
   }
 
-  displayStatus(aqi, pm2_5, pm10, sensorState, batteryPercentage, batteryState);
+  displayStatus(aqi, pm2_5, pm10, sensorState);
 
   for (int i = 0; i < 30; i++) {
     animateDisplay();

@@ -14,7 +14,7 @@ static const CRGB signalColors[] = {
     CRGB::Yellow,      // Moderate
     CRGB::DarkOrange,  // Unhealthy for sensitive groups
     CRGB::Red,         // Unhealthy
-    CRGB::Purple,      // Hazardous
+    CRGB::Purple,      // Very Unhealthy
 };
 
 inline CRGB correct(CRGB c) { return CRGB(c.g, c.r, c.b); }
@@ -50,8 +50,7 @@ struct BlinkSpec {
 static const BlinkSpec NO_BLINK = {0, -1, CRGB::Black};
 static BlinkSpec blinkPixel = NO_BLINK;
 
-void displayStatus(float aqi, int pm2_5, int pm10, State sensorState,
-                   int batteryPercentage, State batteryState) {
+void displayStatus(float aqi, int pm2_5, int pm10, State sensorState) {
   if (sensorState == State::BAD) {
     blinkPixel = NO_BLINK;
     displayPanic(CRGB::OrangeRed);  // Draw orange cross
