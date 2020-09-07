@@ -1,5 +1,11 @@
 #include "Tomoto_HM330X.h"
 
+#ifdef SPARK_PLATFORM
+typedef char WireByte;
+#else
+typedef uint8_t WireByte;
+#endif
+
 Tomoto_HM330X::Tomoto_HM330X(uint8_t addr) : Tomoto_HM330X(Wire, addr) {}
 
 Tomoto_HM330X::Tomoto_HM330X(TwoWire& wire, uint8_t addr)
@@ -33,7 +39,7 @@ bool Tomoto_HM330X::readSensor() {
   // Read data
   uint8_t buf[DATA_SIZE];
   m_wire.requestFrom(m_addr, DATA_SIZE);
-  if (m_wire.readBytes(buf, DATA_SIZE) < DATA_SIZE) {
+  if (m_wire.readBytes((WireByte*)(&buf), DATA_SIZE) < DATA_SIZE) {
     return false;
   }
 
