@@ -1,4 +1,4 @@
-# Arduino_Tomoto_HM330X
+# HM330X by Tomoto Arduino Library 
 
 ## What is this?
 
@@ -6,6 +6,10 @@ Arduino library for HM3301/HM3302 dust sensor.
 https://www.seeedstudio.com/Grove-Laser-PM2-5-Sensor-HM3301.html
 
 This is intended to provide a much simpelr-to-use version of the library originally published by Seeed.
+
+You can install it from Arduino Library Manager.
+
+<img src="https://user-images.githubusercontent.com/552888/124524599-8a58f380-ddb0-11eb-804b-2057b8d4a08c.png" width=560 />
 
 ## How to use this?
 
